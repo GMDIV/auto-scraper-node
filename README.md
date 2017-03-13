@@ -1,0 +1,1 @@
+This is an web scraper in node.js designed to pull the inventory numbers of different makes from a car website. 
