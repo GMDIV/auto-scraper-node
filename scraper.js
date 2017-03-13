@@ -4,7 +4,8 @@ var request = require('request');
 var cheerio = require('cheerio');
 
 var url = "https://www.netdirectautosales.com/inventory/";
-
+var makeDataArray = [];
+var totalCount;
 
 request(url, function(error, response, html) {
     //console.log("html:", html); // Print the HTML for the Google homepage.
@@ -18,13 +19,37 @@ request(url, function(error, response, html) {
     		//console.log(element)
     		var makeData = {
     			name: element.attribs['data-option'],
-    			count: element.children[2].prev.children
+    			count: element.children[2].prev.children[0].data
 
     		}
-    		console.log(makeData.name)
-    		console.log(makeData.count)
+    		console.log(makeData.name);
+    		console.log(makeData.count);
+    		makeDataArray.push(makeData);
     	})
-    }  
+    	$('#page-count').each(function(i,element){
+    		console.log("page-count: ", element.children[0].data)
+    		totalCount = element.children[0].data;
+    		totalCount = totalCount.slice(1); //cuts off the first "("
+    		//splits the totalCount string into an array at the space, isolates
+    		//the number, then converts it from a string into a number.
+    		totalCount = Number(totalCount.split(" ")[0]); 
+    		console.log("totalCount type: ", typeof totalCount)
+    		console.log("new totalCount: ", totalCount)
+    	})
+    	console.log("Total vehicles:", totalCount)
+    	for(var i = 0; i < makeDataArray.length; i++){
+    		var count;
+    		if(makeDataArray[i].count > 12){
+    			count = 12
+    		}
+    		else{
+    			count = makeDataArray[i].count
+    		}
+    		console.log(makeDataArray[i].name + ": " + count) 
+    		
+    	}
+    }
+    console.log("makeDataArray: ", makeDataArray);  
 });
 
 
